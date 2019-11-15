@@ -3,9 +3,15 @@
 public class Movement : MonoBehaviour
 {
     private Rigidbody2D Rb;
+    Rigidbody2D RbProjectile;
     private Collider2D Cl;
     public float MovementSpeed = 5f;
     public float JumpHeight = 5f;
+    public float xProjectileOffset = .5f;
+    public float yProjectileOffset = .5f;
+    public float projectileSpeed = 15f;
+    private float xDir = 1;
+    private float xInput;   
     public bool Grounded;
     public Transform GroundCheck;
     public float GroundRadius;
@@ -30,11 +36,12 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
         IsGround();
+        Direction();
     }
 
     private void Run()
     {
-        float xInput = Input.GetAxis("Horizontal");
+        xInput = Input.GetAxis("Horizontal");
         Vector2 PlayerVelocity = new Vector2(xInput * MovementSpeed, Rb.velocity.y);
         Rb.velocity = PlayerVelocity;
     }
@@ -58,11 +65,34 @@ public class Movement : MonoBehaviour
 
     private void Fire()
     {
-        if (Input.GetButtonDown("Fire3"))
+        if (Input.GetButtonDown("Fire1"))
         {
-            Instantiate(Projectile, transform.position, Quaternion.identity);
-        }
-                
+            if (xDir == 1)
+            {
+                Vector2 spawnPoint = new Vector2(transform.position.x + xProjectileOffset, transform.position.y + yProjectileOffset);
+                Projectile = Instantiate(Projectile, spawnPoint, Quaternion.identity);
+                RbProjectile = Projectile.GetComponent<Rigidbody2D>();
+                RbProjectile.velocity = new Vector2(projectileSpeed * xDir, 0);
+            }
+            else if (xDir == -1)
+            {
+                Vector2 spawnPoint = new Vector2(transform.position.x - xProjectileOffset, transform.position.y + yProjectileOffset);
+                Projectile = Instantiate(Projectile, spawnPoint, Quaternion.identity);
+                RbProjectile = Projectile.GetComponent<Rigidbody2D>();
+                RbProjectile.velocity = new Vector2(projectileSpeed * xDir, 0);
+            }            
+        }                
     }
 
+    private void Direction()
+    {
+        if (xInput == 1)
+        {
+            xDir = 1;
+        }
+        else if (xInput == -1)
+        {
+            xDir = -1;
+        }
+    }
 }
