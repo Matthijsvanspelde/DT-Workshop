@@ -3,20 +3,15 @@
 public class Movement : MonoBehaviour
 {
     private Rigidbody2D Rb;
-    Rigidbody2D RbProjectile;
     private Collider2D Cl;
     public float MovementSpeed = 5f;
     public float JumpHeight = 5f;
-    public float xProjectileOffset = .5f;
-    public float yProjectileOffset = .5f;
-    public float projectileSpeed = 15f;
     private float xDir = 1;
     private float xInput;   
     public bool Grounded;
     public Transform GroundCheck;
     public float GroundRadius;
     public LayerMask WhatIsGround;
-    public GameObject Projectile;
     public Animator animator;
     public Transform character;
 
@@ -34,7 +29,6 @@ public class Movement : MonoBehaviour
     {
         Run();
         Jump();
-        Fire();
     }
 
     private void FixedUpdate()
@@ -67,26 +61,6 @@ public class Movement : MonoBehaviour
         Grounded = Physics2D.OverlapCircle(GroundCheck.position, GroundRadius, WhatIsGround);
     }
 
-    private void Fire()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (xDir == 1)
-            {
-                Vector2 spawnPoint = new Vector2(transform.position.x + xProjectileOffset, transform.position.y + yProjectileOffset);
-                Projectile = Instantiate(Projectile, spawnPoint, Quaternion.identity);
-                RbProjectile = Projectile.GetComponent<Rigidbody2D>();
-                RbProjectile.velocity = new Vector2(projectileSpeed * xDir, 0);
-            }
-            else if (xDir == -1)
-            {
-                Vector2 spawnPoint = new Vector2(transform.position.x - xProjectileOffset, transform.position.y + yProjectileOffset);
-                Projectile = Instantiate(Projectile, spawnPoint, Quaternion.identity);
-                RbProjectile = Projectile.GetComponent<Rigidbody2D>();
-                RbProjectile.velocity = new Vector2(projectileSpeed * xDir, 0);
-            }            
-        }                
-    }
 
     private void Direction()
     {
