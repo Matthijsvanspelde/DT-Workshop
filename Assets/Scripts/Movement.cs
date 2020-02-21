@@ -17,12 +17,16 @@ public class Movement : MonoBehaviour
     public float GroundRadius;
     public LayerMask WhatIsGround;
     public GameObject Projectile;
+    public Animator animator;
+    public Transform character;
 
     // Start is called before the first frame update
     void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
         Cl = GetComponent<Collider2D>();
+        animator = GetComponent<Animator>();
+        character = GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -89,10 +93,17 @@ public class Movement : MonoBehaviour
         if (xInput == 1)
         {
             xDir = 1;
+            animator.SetTrigger("IsWalking");
+            character.localScale = new Vector3(-1, 1, 1);
         }
         else if (xInput == -1)
         {
             xDir = -1;
+            animator.SetTrigger("IsWalking");
+            character.localScale = new Vector3(1, 1, 1);
+        } else if (xInput == 0) 
+        {
+            animator.ResetTrigger("IsWalking");
         }
     }
 }
